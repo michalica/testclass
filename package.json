@@ -1,7 +1,7 @@
 {
-  "name": "typescript-npm-package-template",
-  "version": "0.0.0-development",
-  "description": "A template for creating npm packages using TypeScript and VSCode",
+  "name": "@michalicat/test-class",
+  "version": "0.1.0",
+  "description": "Class mocker for JS projects",
   "main": "./lib/src/index.js",
   "files": [
     "lib/**/*"
@@ -13,20 +13,20 @@
     "coverage": "codecov",
     "lint": "eslint ./src/ --fix",
     "prepare": "husky install",
-    "semantic-release": "semantic-release",
+    "semantic:-release": "semantic-release",
     "test:watch": "jest --watch",
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryansonshine/typescript-npm-package-template.git"
+    "url": "https://github.com/michalica/testclass.git"
   },
   "license": "MIT",
   "author": {
-    "name": "Ryan Sonshine",
-    "email": "ryansonshine@users.noreply.github.com",
-    "url": "https://github.com/ryansonshine"
+    "name": "Tomas Michalica",
+    "email": "michalica.t@gmail.com",
+    "url": "https://github.com/michalica"
   },
   "engines": {
     "node": ">=10.0"
@@ -42,10 +42,7 @@
     "semantic-release",
     "codecov"
   ],
-  "bugs": {
-    "url": "https://github.com/ryansonshine/typescript-npm-package-template/issues"
-  },
-  "homepage": "https://github.com/ryansonshine/typescript-npm-package-template#readme",
+  "homepage": "https://github.com/michalica/testclass#readme",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.23",
