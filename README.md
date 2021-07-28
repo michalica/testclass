@@ -1,82 +1,89 @@
-# typescript-npm-package-template
+# testclass
 
-> Template to kickstart creating a Node.js module using TypeScript and VSCode
+Test-class is testing utility which helps programmers to write tests faster and with less code.
+Library works only with jest right now, but we are planing to support more testing frameworks in the future.
 
-Inspired by [node-module-boilerplate](https://github.com/sindresorhus/node-module-boilerplate)
-
-## Getting started
-
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
-
-```bash
-curl -fsSL https://github.com/ryansonshine/typescript-npm-package-template/archive/main.tar.gz | tar -xz --strip-components=1
-```
-
-**Remove everything from here and above**
-
----
-
-# my-package-name
-
-[![npm package][npm-img]][npm-url]
-[![Build Status][build-img]][build-url]
-[![Downloads][downloads-img]][downloads-url]
-[![Issues][issues-img]][issues-url]
-[![Code Coverage][codecov-img]][codecov-url]
-[![Commitizen Friendly][commitizen-img]][commitizen-url]
-[![Semantic Release][semantic-release-img]][semantic-release-url]
-
-> My awesome module
 
 ## Install
 
 ```bash
-npm install my-package-name
+npm install -D @michalicat/test-class
+```
+
+or
+
+```bash
+yarn add -D @michalicat/test-class
 ```
 
 ## Usage
 
 ```ts
-import { myPackage } from 'my-package-name';
 
-myPackage('hello');
-//=> 'hello from my package'
+// Implementation
+import { describe, expect } from '@jest/globals';
+
+interface CarInterface {
+  start(): void;
+
+  getColor(): string;
+
+  getIsOn(): boolean;
+}
+
+class Car implements CarInterface {
+
+  isOn: boolean = false;
+
+  start(): void {
+    this.isOn = true;
+  }
+
+  getColor(): string {
+    return 'red';
+  }
+
+  getIsOn(): boolean {
+    return this.isOn;
+  }
+}
+
+class Garage {
+
+  constructor(
+    private car: Car = new Car(),
+  ) {
+  }
+
+  hasStartedCarInside(): boolean {
+    return this.car.isOn();
+  }
+}
+
+
+// Test file
+
+import TestClass from '@michalicat/test-class/lib';
+
+describe('test has startedCarInside', () => {
+  it('should call isOn', () => {
+    const car = TestClass.for<Car, CarInterface>(Car).getMock();
+    const garage = new Garage(car);
+
+    garage.hasStartedCarInside();
+
+    expect(car.isOn).toHaveBeenCalled();
+  });
+  it('should call isOn and retun false', () => {
+    const car = TestClass.for<Car, CarInterface>(Car)
+      .mockMethod('isOn')
+      .willReturn(false)
+      .getMock();
+
+
+    expect(garage.hasStartedCarInside()).toBe(false);
+    expect(car.isOn).toHaveBeenCalled();
+    
+  });
+})
 ```
-
-## API
-
-### myPackage(input, options?)
-
-#### input
-
-Type: `string`
-
-Lorem ipsum.
-
-#### options
-
-Type: `object`
-
-##### postfix
-
-Type: `string`
-Default: `rainbows`
-
-Lorem ipsum.
-
-[build-img]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml
-[downloads-img]:https://img.shields.io/npm/dt/typescript-npm-package-template
-[downloads-url]:https://www.npmtrends.com/typescript-npm-package-template
-[npm-img]:https://img.shields.io/npm/v/typescript-npm-package-template
-[npm-url]:https://www.npmjs.com/package/typescript-npm-package-template
-[issues-img]:https://img.shields.io/github/issues/ryansonshine/typescript-npm-package-template
-[issues-url]:https://github.com/ryansonshine/typescript-npm-package-template/issues
-[codecov-img]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template
-[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]:https://github.com/semantic-release/semantic-release
-[commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
-[commitizen-url]:http://commitizen.github.io/cz-cli/
