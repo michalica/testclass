@@ -22,17 +22,13 @@ class ClassToTest implements ClassToTestInterface {
 
 describe('assertion testing', () => {
   it('should create an instance', () => {
-    const testClass = TestClass.for<ClassToTest, ClassToTestInterface>(
-      ClassToTest
-    );
+    const testClass = TestClass.for(ClassToTest);
 
     expect(testClass).toBeInstanceOf(TestClass);
   });
 
   it('should return correct mock', () => {
-    const testClass = TestClass.for<ClassToTest, ClassToTestInterface>(
-      ClassToTest
-    ).getMock();
+    const testClass = TestClass.for(ClassToTest).getMock();
 
     expect(testClass.method1.toString()).toEqual(jest.fn().toString());
     expect(testClass.method2.toString()).toEqual(jest.fn().toString());
@@ -41,48 +37,41 @@ describe('assertion testing', () => {
 
   it('should return correct custom mock', () => {
     const method1 = jest.fn(() => 1);
-    const testClass = TestClass.for<ClassToTest, ClassToTestInterface>(
-      ClassToTest,
-      {
-        customMocks: {
-          method1: method1,
-        },
-      }
-    ).getMock();
+    const testClass = TestClass.for(ClassToTest, {
+      customMocks: {
+        method1: method1,
+      },
+    }).getMock();
 
     expect(testClass.method1).toEqual(method1);
   });
 
-  it('should return all mocks', () => {
-    const { instance, methodsToMockMap } = TestClass.testClassFor<
-      ClassToTest,
-      ClassToTestInterface
-    >(new ClassToTest());
-    expect(instance.method1).toBe(methodsToMockMap.method1);
-    expect(instance.method2).toBe(methodsToMockMap.method2);
-    expect(instance.method3).toBe(methodsToMockMap.method3);
+  it('should mock all methods of class', () => {
+    const testClass = TestClass.for(ClassToTest);
+
+    const instance = testClass.getMock();
+
+    expect(instance.method1).toBeTruthy();
+    expect(instance.method2).toBeTruthy();
+    expect(instance.method3).toBeTruthy();
   });
 
   it('should return custom mock', () => {
     const mock = jest.fn();
 
-    const { instance, methodsToMockMap } = TestClass.testClassFor<
-      ClassToTest,
-      ClassToTestInterface
-    >(new ClassToTest(), {
+    const testClass = TestClass.for(ClassToTest, {
       customMocks: {
         method1: mock,
       },
     });
 
+    const instance = testClass.getMock();
+
     expect(instance.method1).toBe(mock);
-    expect(methodsToMockMap.method1).toBe(mock);
   });
 
   it('Mock syntax returns correct return value', () => {
-    const mockedInstance = TestClass.for<ClassToTest, ClassToTestInterface>(
-      ClassToTest
-    )
+    const mockedInstance = TestClass.for(ClassToTest)
       .mockMethod('method1')
       .willReturn('test')
       .getMock();
@@ -92,9 +81,7 @@ describe('assertion testing', () => {
   });
 
   it('Mock syntax returns correct return value', () => {
-    const mockedInstance = TestClass.for<ClassToTest, ClassToTestInterface>(
-      ClassToTest
-    )
+    const mockedInstance = TestClass.for(ClassToTest)
       .mockMethod('method1')
       .willThrow(new Error())
       .getMock();
