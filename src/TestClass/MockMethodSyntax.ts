@@ -1,26 +1,25 @@
 import TestClass from './TestClass';
 
 export default class MockMethodSyntax<
-  A extends Record<string, unknown>,
-  B extends Record<string, unknown>
+  ClassImpl extends ConstructorOf<ClassImpl['prototype']>
 > {
   public constructor(
-    private testClass: TestClass<A, B>,
+    private testClass: TestClass<ClassImpl>,
     private methodName: string | number | symbol
   ) {}
 
-  public withImplementation(implementation: jest.Mock): TestClass<A, B> {
+  public withImplementation(implementation: jest.Mock): TestClass<ClassImpl> {
     this.testClass.setMockImplementation(
-      this.methodName as keyof B,
+      this.methodName as keyof ClassImpl['prototype'],
       implementation
     );
 
     return this.testClass;
   }
 
-  public willReturn(returnValue: unknown): TestClass<A, B> {
+  public willReturn(returnValue: unknown): TestClass<ClassImpl> {
     this.testClass.setMockImplementation(
-      this.methodName as keyof B,
+      this.methodName as keyof ClassImpl['prototype'],
       jest.fn(() => returnValue)
     );
 
@@ -30,9 +29,9 @@ export default class MockMethodSyntax<
   /**
    * @description Returns a Promise which will resolve with the specified value
    */
-  public willReturnResolvedValue(returnValue: unknown): TestClass<A, B> {
+  public willReturnResolvedValue(returnValue: unknown): TestClass<ClassImpl> {
     this.testClass.setMockImplementation(
-      this.methodName as keyof B,
+      this.methodName as keyof ClassImpl['prototype'],
       jest.fn(() => Promise.resolve(returnValue))
     );
 
@@ -42,18 +41,18 @@ export default class MockMethodSyntax<
   /**
    * @description Returns a Promise which will reject with the specified value
    */
-  public willReturnRejectedValue(returnValue: unknown): TestClass<A, B> {
+  public willReturnRejectedValue(returnValue: unknown): TestClass<ClassImpl> {
     this.testClass.setMockImplementation(
-      this.methodName as keyof B,
+      this.methodName as keyof ClassImpl['prototype'],
       jest.fn(() => Promise.reject(returnValue))
     );
 
     return this.testClass;
   }
 
-  public willThrow(exception: Error): TestClass<A, B> {
+  public willThrow(exception: Error): TestClass<ClassImpl> {
     this.testClass.setMockImplementation(
-      this.methodName as keyof B,
+      this.methodName as keyof ClassImpl['prototype'],
       jest.fn(() => {
         throw exception;
       })
